@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:world_time/services/world_time.dart';
@@ -11,8 +11,6 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  String time = 'loading';
-
   Future<void> setupWorldTime() async {
     WorldTime instance = WorldTime(
       location: 'Berlin',
@@ -20,11 +18,15 @@ class _LoadingState extends State<Loading> {
       endPoint: 'Europe/Berlin',
     );
     await instance.getTime();
-    print(instance.time);
-
-    setState(() {
-      time = instance.time;
-    });
+    Navigator.pushReplacementNamed(
+      context,
+      '/home',
+      arguments: {
+        'location': instance.location,
+        'flag': instance.flag,
+        'time': instance.time,
+      },
+    );
   }
 
   @override
@@ -35,11 +37,11 @@ class _LoadingState extends State<Loading> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(50.0),
+        padding: EdgeInsets.all(50.0),
         child: Text(
-          time,
+          'loading',
         ),
       ),
     );
