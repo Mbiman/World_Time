@@ -11,25 +11,30 @@ class WorldTime {
       {required this.location, required this.flag, required this.endPoint});
 
   Future<void> getTime() async {
-    //make the request
-    String url = 'http://worldtimeapi.org/api/timezone/$endPoint';
-    Response response = await get(Uri.parse(url));
-    Map data = jsonDecode(response.body);
-    //print(data);
+    try {
+      //make the request
+      String url = 'http://worldtimeapi.org/api/timezone/$endPoint';
+      Response response = await get(Uri.parse(url));
+      Map data = jsonDecode(response.body);
+      //print(data);
 
-    //get properties from the data
-    String dateTime = data['datetime'];
-    String offset = data['utc_offset'].toString().substring(1, 3);
+      //get properties from the data
+      String dateTime = data['datetime'];
+      String offset = data['utc_offset'].toString().substring(1, 3);
 
-    // print(dateTime);
-    // print(offset);
+      // print(dateTime);
+      // print(offset);
 
-    //create a dateTime object
+      //create a dateTime object
 
-    DateTime now = DateTime.parse(dateTime);
-    now = now.add(Duration(hours: int.parse(offset)));
+      DateTime now = DateTime.parse(dateTime);
+      now = now.add(Duration(hours: int.parse(offset)));
 
-    //set the time property
-    time = now.toString();
+      //set the time property
+      time = now.toString();
+    } catch (e) {
+      print('caught error : $e');
+      time = 'could not get time data';
+    }
   }
 }
