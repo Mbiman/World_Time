@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:world_time/services/world_time.dart';
 
@@ -24,12 +26,30 @@ class _ChooseLocationState extends State<ChooseLocation> {
         location: 'Seoul', flag: 'south_korea.png', endPoint: 'Asia/Seoul'),
     WorldTime(
         location: 'Jarkata', flag: 'indonesia.png', endPoint: 'Asia/Jakarta'),
-    WorldTime(location: 'Lagos', flag: 'ngn.png', endPoint: 'Afica/Lagos'),
+    WorldTime(location: 'Lagos', flag: 'ngn.png', endPoint: 'Africa/Lagos'),
     WorldTime(
         location: 'Johannesburg',
         flag: 'za.png',
-        endPoint: 'Afica/Johannesburg'),
+        endPoint: 'Africa/Johannesburg'),
+    WorldTime(location: 'Accra', flag: 'gh.png', endPoint: 'Africa/Accra'),
+    WorldTime(location: 'Tokyo', flag: 'jp.png', endPoint: 'Asia/Tokyo'),
+    WorldTime(location: 'Lisbon', flag: 'pt.png', endPoint: 'Europe/Lisbon'),
   ];
+
+  void updateTime(index) async {
+    WorldTime instance = locations[index];
+    await instance.getTime();
+    // navigate/reroute to home screen
+    Navigator.pop(
+      context,
+      {
+        'location': instance.location,
+        'flag': instance.flag,
+        'time': instance.time,
+        'theme': instance.isDayTime,
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +63,18 @@ class _ChooseLocationState extends State<ChooseLocation> {
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              onTap: () {},
-              title: Text(locations[index].location),
-              leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/${locations[index].flag}'),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+            child: Card(
+              child: ListTile(
+                onTap: () {
+                  updateTime(index);
+                },
+                title: Text(locations[index].location),
+                leading: CircleAvatar(
+                  backgroundImage:
+                      AssetImage('assets/${locations[index].flag}'),
+                ),
               ),
             ),
           );
